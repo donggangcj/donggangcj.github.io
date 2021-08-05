@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.happyhack.io/2021/08/05/fio-and-etcd/</loc>
+    
+    <lastmod>2021-08-05T07:21:12.882Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.happyhack.io/about/index.html</loc>
     
     <lastmod>2021-06-24T08:24:36.078Z</lastmod>

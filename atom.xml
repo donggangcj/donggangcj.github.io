@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://blog.happyhack.io/"/>
-  <updated>2020-12-06T11:23:45.125Z</updated>
+  <updated>2021-08-05T07:21:12.882Z</updated>
   <id>https://blog.happyhack.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用Fio测试存储性能是否满足etcd要求</title>
+    <link href="https://blog.happyhack.io/2021/08/05/fio-and-etcd/"/>
+    <id>https://blog.happyhack.io/2021/08/05/fio-and-etcd/</id>
+    <published>2021-08-05T09:21:12.000Z</published>
+    <updated>2021-08-05T07:21:12.882Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;概要&quot;&gt;&lt;a href=&quot;#概要&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="云原生" scheme="https://blog.happyhack.io/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/"/>
+    
+    
+      <category term="etcd" scheme="https://blog.happyhack.io/tags/etcd/"/>
+    
+      <category term="fio" scheme="https://blog.happyhack.io/tags/fio/"/>
+    
+  </entry>
   
   <entry>
     <title>kubernetes平台开发者小技巧</title>
@@ -539,34 +568,6 @@ template
       <category term="kubernetes" scheme="https://blog.happyhack.io/tags/kubernetes/"/>
     
       <category term="kubernetes平台开发者" scheme="https://blog.happyhack.io/tags/kubernetes%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91%E8%80%85/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Docker-container详解</title>
-    <link href="https://blog.happyhack.io/2019/10/30/docker-container/"/>
-    <id>https://blog.happyhack.io/2019/10/30/docker-container/</id>
-    <published>2019-10-30T12:43:56.000Z</published>
-    <updated>2020-12-06T11:23:44.893Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;本文介绍docker中的contanier,基于操作系统介绍什么是container。&lt;/p&gt;
-&lt;h2 id=&quot;进程（Processes&quot;&gt;&lt;a href=&quot;#进程（Processes&quot; class=&quot;headerlink&quot;
-        
-      
-    
-    </summary>
-    
-    
-      <category term="云原生" scheme="https://blog.happyhack.io/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/"/>
-    
-    
-      <category term="docker" scheme="https://blog.happyhack.io/tags/docker/"/>
     
   </entry>
   
