@@ -1,0 +1,305 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>kubeedge介绍 | Happy Hack Everday</title><meta name="keywords" content="kubeedge,边缘计算"><meta name="author" content="Holder"><meta name="copyright" content="Holder"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="KubeEdge即Kube加Edge，顾名思义就是依托k8s的容器编排能力和调度能力，实现云边协同、计算下沉、海量设备的平滑接入， 旨在为边缘计算和IoT这两大物联网领域提供统一的平台方案，本次分享将给大家简单介绍目前KubeEdge项目进展，它的架构设计，以及我们基于KubeEdge做了哪些工作， 并详细分析KubeEdge是如何解决云边网络通信问题的。  本文主要内容取自一次我在公司的内部分享">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubeedge介绍">
+<meta property="og:url" content="https://blog.happyhack.io/2020/10/27/kubeedge-day-01/index.html">
+<meta property="og:site_name" content="Happy Hack Everday">
+<meta property="og:description" content="KubeEdge即Kube加Edge，顾名思义就是依托k8s的容器编排能力和调度能力，实现云边协同、计算下沉、海量设备的平滑接入， 旨在为边缘计算和IoT这两大物联网领域提供统一的平台方案，本次分享将给大家简单介绍目前KubeEdge项目进展，它的架构设计，以及我们基于KubeEdge做了哪些工作， 并详细分析KubeEdge是如何解决云边网络通信问题的。  本文主要内容取自一次我在公司的内部分享">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/donggangcj/CDN@master/image/kubeedge-day-01/2020-10-27-17-52-03.png">
+<meta property="article:published_time" content="2020-10-27T10:52:34.000Z">
+<meta property="article:modified_time" content="2024-06-20T02:29:28.127Z">
+<meta property="article:author" content="Holder">
+<meta property="article:tag" content="kubeedge">
+<meta property="article:tag" content="边缘计算">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/donggangcj/CDN@master/image/kubeedge-day-01/2020-10-27-17-52-03.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/faicon.png"><link rel="canonical" href="https://blog.happyhack.io/2020/10/27/kubeedge-day-01/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.4.2',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: {"text":"富強,民主,文明,和諧,自由,平等,公正,法治,愛國,敬業,誠信,友善","fontSize":"15px"},
+  lightbox: 'mediumZoom',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2024-06-20 08:29:28'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {
+  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+
+  const autoChangeMode = '1'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }
+})()</script><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Happy Hack Everday" type="application/atom+xml">
+</head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/logo.webp" type="image/webp"><img class="avatar-img" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></picture></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">30</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">34</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 资源</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#KubeEdge%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">KubeEdge项目介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8Ekubernetes%E6%9E%84%E5%BB%BA%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E7%9A%84%E4%BC%98%E7%82%B9%E5%92%8C%E7%97%9B%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">基于kubernetes构建边缘计算的优点和痛点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KubeEdge%E7%9A%84%E6%9E%B6%E6%9E%84%E5%8F%8A%E6%A0%B8%E5%BF%83%E7%90%86%E5%BF%B5"><span class="toc-number">3.</span> <span class="toc-text">KubeEdge的架构及核心理念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%B2%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="toc-number">3.1.</span> <span class="toc-text">已实现的核心功能</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KubeEdge2-0-Roadmap"><span class="toc-number">4.</span> <span class="toc-text">KubeEdge2.0 Roadmap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KubeEdge%E7%9A%84%E4%B8%8D%E8%B6%B3%E4%BB%A5%E5%8F%8A%E6%88%91%E4%BB%AC%E9%9C%80%E8%A6%81%E5%8E%BB%E5%81%9A%E7%9A%84%E5%B7%A5%E4%BD%9C"><span class="toc-number">5.</span> <span class="toc-text">KubeEdge的不足以及我们需要去做的工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%89%8D%E6%88%91%E4%BB%AC%E5%81%9A%E7%9A%84"><span class="toc-number">6.</span> <span class="toc-text">目前我们做的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kubeedge%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86"><span class="toc-number">7.</span> <span class="toc-text">kubeedge通信原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%B2%E8%AE%B2%E8%B7%B3%E8%BF%87%E7%9A%84%E5%9D%91"><span class="toc-number">8.</span> <span class="toc-text">讲讲跳过的坑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">9.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">10.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/donggangcj/CDN@master/image/kubeedge-day-01/2020-10-27-17-52-03.png)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Happy Hack Everday</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 资源</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">kubeedge介绍</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-10-27T10:52:34.000Z" title="发表于 2020-10-27 16:52:34">2020-10-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-20T02:29:28.127Z" title="更新于 2024-06-20 08:29:28">2024-06-20</time></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p><strong>KubeEdge</strong>即<strong>Kube</strong>加<strong>Edge</strong>，顾名思义就是依托k8s的容器编排能力和调度能力，实现云边协同、计算下沉、海量设备的平滑接入，
+旨在为边缘计算和IoT这两大物联网领域提供统一的平台方案，本次分享将给大家简单介绍目前KubeEdge项目进展，它的架构设计，以及我们基于KubeEdge做了哪些工作，
+并详细分析KubeEdge是如何解决云边网络通信问题的。</p>
+<blockquote>
+<p>本文主要内容取自一次我在公司的内部分享</p>
+</blockquote>
+<h2 id="KubeEdge项目介绍"><a href="#KubeEdge项目介绍" class="headerlink" title="KubeEdge项目介绍"></a>KubeEdge项目介绍</h2><p>KubeEdge是华为推出的业内首个开源边缘容器平台项目，是由华为云边缘计算产品IEF开源而来，<strong>Apache 2.0</strong>开源协议，并于2019年3月捐献给CNCF基金会，在2019年9月晋级为<strong>孵化级</strong>项目，
+在CNCF的社区建设上，KubeEdge积极参与<strong>kubernetes IoT Edge WG</strong>，同时也成立了Device/IoT与MEC两个SIG，可以说KubeEdge先发制人，
+在社区已经拥有了足够多话语权。目前参与社区贡献的企业包括：中国联通，ARM，中国移动，谐云，中国电信，时速云，JD.com，浙大SEL实验室，EMQ，
+InfoBlox，Inovex，Midokura等。</p>
+<h2 id="基于kubernetes构建边缘计算的优点和痛点"><a href="#基于kubernetes构建边缘计算的优点和痛点" class="headerlink" title="基于kubernetes构建边缘计算的优点和痛点"></a>基于kubernetes构建边缘计算的优点和痛点</h2><p>为什么要基于kubernetes构建边缘计算平台呢？因为kubernetes是在太香了🤪，那我简单概括了kubernetes主要的四核心的优势：</p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-23-42.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-23-42.png" alt></picture></p>
+<p><em>容器化应用封装:</em> 现已成为应用交付的一个趋势,我们可以把应用打包到容器中，且只需要只打包一次，
+可以跑在各种地方，如果应用到IoT领域，有很多传统IoT嵌入式设备，它其实很多硬件和软件是强相关的，
+更换一个硬件，可能软件（固件）都需要更改，如果使用容器化封装后，设备可以支持容器runtime，我们就可以将容器跑在任何IoT设备上。</p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-26-27.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-26-27.png" alt></picture>
+<em>通用应用抽象定义</em> kubernetes的API包括pod的定义以及development，daemonset等控制器的定义现在其实在业内已经形成一套标准， 
+大家都比较了解和认可，基于这些通用应用负载模型做边缘计算平台，大家也更能接受。</p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-26-52.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-26-52.png" alt></picture>
+<em>松耦合架构</em> kubernetess的架构设计具有相当的先进性，可拓展性比较好，比如我们基于k8s之上可以通过CRD来定义一些API，通过设备管理CRD来定义一些IoT里的device的API,
+我们即可以通过k8s的一些管理方式管理这些设备；还有一些有意义的可拓展点，比如边缘节点可以对接各种runtime，有些边缘节点它的资源非常有限，
+我们就可以对接一些轻量化的runtime。</p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-27-34.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-27-34.png" alt></picture>
+<em>丰富的社区生态</em> k8s其丰富的拓展性给我们带来无限可能，同时借助其生态，能够极大地赋能边缘计算平台，减少开发工作量的同时也有强大的社区保障。</p>
+<p>下图是KubeEdge给出的其核心的优势，不难看出，大部分都是由于其借助了kubernetes构建平台所带来的。</p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-30-36.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-30-36.png" alt></picture></p>
+<p>当然基于kubernetes还有很多优势，那么有哪些边缘计算的常见的关键痛点需要KubeEdge解决呢?</p>
+<ol>
+<li>资源有限：常见的网关设备内存很少，无法满足kubernetes对边缘节点的资源需求</li>
+<li>网络不畅<ul>
+<li>边缘位于私有网络，无公网IP</li>
+<li>云边跨越公网，带宽有限，延时高</li>
+<li>k8s的List-watch需要数据中心网络</li>
+</ul>
+</li>
+<li>边缘节点如何自治<ul>
+<li>网络不稳，随时可能离线</li>
+<li>边缘业务离线工作</li>
+<li>边缘离线可故障恢复</li>
+</ul>
+</li>
+<li>设备接入和管理<ul>
+<li>缺少边缘设备抽象</li>
+<li>缺少边缘设备接入协议的支持</li>
+</ul>
+</li>
+</ol>
+<h2 id="KubeEdge的架构及核心理念"><a href="#KubeEdge的架构及核心理念" class="headerlink" title="KubeEdge的架构及核心理念"></a>KubeEdge的架构及核心理念</h2><p>KubeEdge架构主要是分了云、边、端三部分，云上边就是我们的控制面，边就是我们的边缘节点，
+端就是跑了我们的一些端侧设备，云上左边是一个Kubernetes的master，是没有做过改动的原生的K8s控制），
+后边KubeEdge的一个组件叫CloudCore，云上的组件主要是会拿一些Kubernetes控制面上的东西，
+通过EdgeController和DeviceController做一些处理，然后通过下边的Cloud Hub，Cloud Hub主要是跟边端通信的，
+边端有个EdgeHub和Cloud Hub通信，然后把数据拿下来。</p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-33-55.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-33-55.png" alt></picture></p>
+<p>边端是主要做了一个应用管理和设备管理的能力，应用管理左边会有一个Edged，
+右边有DeviceTwin、EventBus，分别是应用管理和设备管理，左边有个DataStore，就是我们说的本地自治的能力，
+比如说我们这应用或者设备的元素从云上分发下来，我们是先把它存到一个数据库里，然后再到它的Edged或者设备里边，
+这样就能保证云边网络断开或者边缘节点重启了以后我应用的Edged它可以从数据库里把应用源数据拿出来，
+这样就能保证在故障的情况下业务可以正常恢复。</p>
+<h3 id="已实现的核心功能"><a href="#已实现的核心功能" class="headerlink" title="已实现的核心功能"></a>已实现的核心功能</h3><ol>
+<li>云边可靠协同<ul>
+<li>双向多路服用消息通道，支持边缘节点位于私有网络</li>
+<li>Websocket + 消息封装，大幅减少通信压力，高延时下仍可正常工作</li>
+<li>云边消息校验</li>
+</ul>
+</li>
+<li>边缘离线自治<ul>
+<li>节点云数据持久化，实现节点级离线自治</li>
+<li>节点故障恢复，无需List-watch，降低网络压力，快速ready</li>
+</ul>
+</li>
+<li>边缘极致轻量<ul>
+<li>重组Kubelet功能模块，极致轻量化（～70MB内存占用）</li>
+<li>支持CRI集成，Containerd、CRI-O，优化runtime资源消耗</li>
+</ul>
+</li>
+<li>边缘设备管理<ul>
+<li>云端通过kubernetes API管理设备Device</li>
+</ul>
+</li>
+</ol>
+<h2 id="KubeEdge2-0-Roadmap"><a href="#KubeEdge2-0-Roadmap" class="headerlink" title="KubeEdge2.0 Roadmap"></a>KubeEdge2.0 Roadmap</h2><p>以下是官方给的2.0计划支持的亮点功能:</p>
+<ol>
+<li>支持istio；</li>
+<li>支持FaaS；</li>
+<li>支持更多类型的设备协议到边缘节点，如AMQP，蓝牙，ZigBee等；</li>
+<li>支持千个边缘节点和数百万个设备的超大规模边缘集群（kubernetes推荐单集群最大节点数是1000）；</li>
+<li>实现数千节点的应用智能调度；</li>
+</ol>
+<h2 id="KubeEdge的不足以及我们需要去做的工作"><a href="#KubeEdge的不足以及我们需要去做的工作" class="headerlink" title="KubeEdge的不足以及我们需要去做的工作"></a>KubeEdge的不足以及我们需要去做的工作</h2><ol>
+<li>相关组件没有容器化以及缺乏高可用性方案</li>
+<li>项目处于发展中期，很多东西处于不稳定状态</li>
+<li>社区不是特别活跃，比如example目前无法在1.4版本上正常运行</li>
+<li>安装工具keadm没有支持离线安装，且有一些缺陷</li>
+<li>没有具体性能测试数据支撑</li>
+</ol>
+<h2 id="目前我们做的"><a href="#目前我们做的" class="headerlink" title="目前我们做的"></a>目前我们做的</h2><ol>
+<li>基于公司PaaS产品提供完整的云端用户体验包括统一内置镜像仓，管理界面等；</li>
+<li>自定义EdgeAppController，以满足边缘场景下应用下发的需求；</li>
+<li>完整的监控告警支持，以及自定义指标的开发（Exporter的改造）；</li>
+<li>管理员友好的Dashboard，包括更友好的应用部署，节点接入等功能；</li>
+<li>一些稳定性改造（云端组件cloudcore的service化）；</li>
+<li>KubeEdge的定制化，用于合并一些无法第一时间被社区合并Release的有价值的功能分支，定制化我们的功能；</li>
+</ol>
+<h2 id="kubeedge通信原理"><a href="#kubeedge通信原理" class="headerlink" title="kubeedge通信原理"></a>kubeedge通信原理</h2><p>我们是否能像管理普通节点一样管理边缘节点呢？比如说查看某个容器的调试日志，资源用量，<em>Exec</em>到某个容器中进行调试，
+通过Prometheus监控节点和应用等等，这些功能对于无论是PaaS还是边缘计算平台都非常重要💰。KubeEdge较早版本没有给出解决方案，
+也就是说这些功能无法从KubeEdge开箱直接获取，实现以上功能最大的障碍就是网络问题🌎。</p>
+<p>目前针对这些功能，较新版本KubeEdge已经给出对应的解决方案，即通过<em>隧道Tunnel+自定义消息</em>实现，主要对应的模块是CloudStream和EdgeStream。
+当我们需要这些功能时，必须开启这两个模块，同时进行配置，具体配置可以参考官方文档，以下这两个模块的通信示意图。</p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-40-04.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-40-04.png" alt></picture></p>
+<p>这里我以Prometheus抓取Edge节点容器运行时指标数据为例，帮大家大致梳理流程以及主要函数。</p>
+<blockquote>
+<p>在普通kubernetes集群中可以通过安装cadvisor获取容器运行时的一些指标数据，
+KubeEdge受限于资源的限制，无法在边缘节点安装cadvisor组件，目前Edged已实现了cadvisor的指标定义。</p>
+</blockquote>
+<p>现在，prometheus要抓取edge1(10.31.100.4)上edged所定义的指标时，请求10.31.100.4:10350/metrics/cadvisor，
+由于我们配置iptables nat表的OUTPUT,所有target port为10350报文都会被转发到本机的10003的端口，
+由于TCP协议栈处于内核，在应用层收到请求的Source IP和Port不会改变，至此该请求将会有CloudStream内置的Http Server处理，
+这个Http服务默认端口为10003，它的主要功能就是处理被拦截的各种流量，目前包括Log、Metrics、节点统计等流量。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *StreamServer)</span> <span class="title">installDebugHandler</span><span class="params">()</span></span> &#123;</span><br><span class="line">	ws := <span class="built_in">new</span>(restful.WebService)</span><br><span class="line">	ws.Path(<span class="string">&quot;/containerLogs&quot;</span>)</span><br><span class="line">	ws.Route(ws.GET(<span class="string">&quot;/&#123;podNamespace&#125;/&#123;podID&#125;/&#123;containerName&#125;&quot;</span>).</span><br><span class="line">		To(s.getContainerLogs))</span><br><span class="line">	s.container.Add(ws)</span><br><span class="line">	ws = <span class="built_in">new</span>(restful.WebService)</span><br><span class="line">	ws.Path(<span class="string">&quot;/exec&quot;</span>)</span><br><span class="line">	ws.Route(ws.GET(<span class="string">&quot;/&#123;podNamespace&#125;/&#123;podID&#125;/&#123;containerName&#125;&quot;</span>).</span><br><span class="line">		To(s.getExec))</span><br><span class="line">	ws.Route(ws.POST(<span class="string">&quot;/&#123;podNamespace&#125;/&#123;podID&#125;/&#123;containerName&#125;&quot;</span>).</span><br><span class="line">		To(s.getExec))</span><br><span class="line">	ws.Route(ws.GET(<span class="string">&quot;/&#123;podNamespace&#125;/&#123;podID&#125;/&#123;uid&#125;/&#123;containerName&#125;&quot;</span>).</span><br><span class="line">		To(s.getExec))</span><br><span class="line">	ws.Route(ws.POST(<span class="string">&quot;/&#123;podNamespace&#125;/&#123;podID&#125;/&#123;uid&#125;/&#123;containerName&#125;&quot;</span>).</span><br><span class="line">		To(s.getExec))</span><br><span class="line">	s.container.Add(ws)</span><br><span class="line">	ws = <span class="built_in">new</span>(restful.WebService)</span><br><span class="line">	ws.Path(<span class="string">&quot;/stats&quot;</span>)</span><br><span class="line">	ws.Route(ws.GET(<span class="string">&quot;&quot;</span>).</span><br><span class="line">		To(s.getMetrics))</span><br><span class="line">	ws.Route(ws.GET(<span class="string">&quot;/summary&quot;</span>).</span><br><span class="line">		To(s.getMetrics))</span><br><span class="line">	ws.Route(ws.GET(<span class="string">&quot;/container&quot;</span>).</span><br><span class="line">		To(s.getMetrics))</span><br><span class="line">	ws.Route(ws.GET(<span class="string">&quot;/&#123;podName&#125;/&#123;containerName&#125;&quot;</span>).</span><br><span class="line">		To(s.getMetrics))</span><br><span class="line">	ws.Route(ws.GET(<span class="string">&quot;/&#123;namespace&#125;/&#123;podName&#125;/&#123;uid&#125;/&#123;containerName&#125;&quot;</span>).</span><br><span class="line">		To(s.getMetrics))</span><br><span class="line">	s.container.Add(ws)</span><br><span class="line">	<span class="comment">// metrics api is widely used for Promethus</span></span><br><span class="line">	ws = <span class="built_in">new</span>(restful.WebService)</span><br><span class="line">	ws.Path(<span class="string">&quot;/metrics&quot;</span>)</span><br><span class="line">	ws.Route(ws.GET(<span class="string">&quot;&quot;</span>).</span><br><span class="line">		To(s.getMetrics))</span><br><span class="line">	ws.Route(ws.GET(<span class="string">&quot;/cadvisor&quot;</span>).</span><br><span class="line">		To(s.getMetrics))</span><br><span class="line">	s.container.Add(ws)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>指标对应处理请求函数为<code>getMetrics</code>，主要过程是根据<code>r.Request.Host</code>找到对应Session（cloudstream维护了到每个edge节点的session池，Key即edge的Internal Ip，
+每个session负责向Tunnel发送和读取Message)，创建新的处理的协程，并将其添加到任务池<code>Session.apiServerConn</code>中，处理协程中将真实的请求数据（原请求）<code>编码</code>为Message，
+并通过通道发送edgenode1的edgestream进行处理。</p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-42-51.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubeedge-day-01/2020-10-27-14-42-51.png" alt></picture></p>
+<p>🧐此时，请求已经被发送到edgenode1上，且被edgestream的轮询监听函数收到，edgestream会通过函数<code>ReadMessageFromTunnel</code>对消息进行解码， 
+判断消息的类型，这里显然是一个<em>Metrics类型</em>的消息。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ReadMessageFromTunnel</span><span class="params">(r io.Reader)</span> <span class="params">(*Message, error)</span></span> &#123;</span><br><span class="line">	buf := bufio.NewReader(r)</span><br><span class="line">	connectID, err := binary.ReadUvarint(buf)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">	messageType, err := binary.ReadUvarint(buf)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">	data, err := ioutil.ReadAll(buf)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">	klog.Infof(<span class="string">&quot;Receive Tunnel message Connectid %d messageType %s data:%v string:[%v]&quot;</span>,</span><br><span class="line">		connectID, MessageType(messageType), data, <span class="keyword">string</span>(data))</span><br><span class="line">	<span class="keyword">return</span> &amp;Message&#123;</span><br><span class="line">		ConnectID:   connectID,</span><br><span class="line">		MessageType: MessageType(messageType),</span><br><span class="line">		Data:        data,</span><br><span class="line">	&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果是合法的消息，edgestream创建新的协程进行处理，并把这些处理协程添加统一的任务池中，这里Metrics类型的处理过程为，
+将Message进行<code>解码</code>得到原始请求数据，并发起真实请求（这时已经成功穿透到内网啦），并将Metrics数据在编码成Message通过通道发送到cloudstream中。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 消息解码</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *TunnelSession)</span> <span class="title">serveMetricsConnection</span><span class="params">(m *stream.Message)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	metricsCon := &amp;stream.EdgedMetricsConnection&#123;</span><br><span class="line">		ReadChan: <span class="built_in">make</span>(<span class="keyword">chan</span> *stream.Message, <span class="number">128</span>),</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> err := json.Unmarshal(m.Data, metricsCon); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		klog.Errorf(<span class="string">&quot;unmarshal connector data error %v&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	s.AddLocalConnection(m.ConnectID, metricsCon)</span><br><span class="line">	<span class="keyword">return</span> metricsCon.Serve(s.Tunnel)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 发送真实请求</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ms *EdgedMetricsConnection)</span> <span class="title">Serve</span><span class="params">(tunnel SafeWriteTunneler)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	client := http.Client&#123;&#125;</span><br><span class="line">	req, err := http.NewRequest(<span class="string">&quot;GET&quot;</span>, ms.URL.String(), <span class="literal">nil</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		klog.Errorf(<span class="string">&quot;create new metrics request error %v&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">	req.Header = ms.Header</span><br><span class="line">	<span class="comment">// 目前通道只支持Text message，这里解决了Prometheus抓取失败的问题</span></span><br><span class="line">	req.Header.Set(<span class="string">&quot;accept-encoding&quot;</span>, <span class="string">&quot;identity&quot;</span>)</span><br><span class="line">	resp, err := client.Do(req)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		klog.Errorf(<span class="string">&quot;request metrics error %v&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> resp.Body.Close()</span><br><span class="line">	scan := bufio.NewScanner(resp.Body)</span><br><span class="line">	stop := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> mess := <span class="keyword">range</span> ms.ReadChan &#123;</span><br><span class="line">			<span class="keyword">if</span> mess.MessageType == MessageTypeRemoveConnect &#123;</span><br><span class="line">				klog.Infof(<span class="string">&quot;receive remove client id %v&quot;</span>, mess.ConnectID)</span><br><span class="line">				<span class="built_in">close</span>(stop)</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> retry := <span class="number">0</span>; retry &lt; <span class="number">3</span>; retry++ &#123;</span><br><span class="line">			msg := NewMessage(ms.MessID, MessageTypeRemoveConnect, <span class="literal">nil</span>)</span><br><span class="line">			<span class="keyword">if</span> err := msg.WriteTo(tunnel); err != <span class="literal">nil</span> &#123;</span><br><span class="line">				klog.Errorf(<span class="string">&quot;%v send %s message error %v&quot;</span>, ms, msg.MessageType, err)</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">break</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> scan.Scan() &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> &lt;-stop:</span><br><span class="line">			klog.Infof(<span class="string">&quot;receive stop single, so stop metrics scan ...&quot;</span>)</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 10 = \n</span></span><br><span class="line">		msg := NewMessage(ms.MessID, MessageTypeData, <span class="built_in">append</span>(scan.Bytes(), <span class="number">10</span>))</span><br><span class="line">		err := msg.WriteTo(tunnel)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			klog.Errorf(<span class="string">&quot;write tunnel message %v error&quot;</span>, msg)</span><br><span class="line">			<span class="keyword">return</span> err</span><br><span class="line">		&#125;</span><br><span class="line">		klog.Infof(<span class="string">&quot;%v write metrics data %v&quot;</span>, ms.String(), <span class="keyword">string</span>(scan.Bytes()))</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>最后一步，终于要结束啦😅！cloudstream会读取Message，解码得到用户需要的指标数据，并响应请求。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Session)</span> <span class="title">Serve</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> s.Close()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		t, r, err := s.tunnel.NextReader()</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			klog.Errorf(<span class="string">&quot;get %v reader error %v&quot;</span>, s, err)</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> t != websocket.TextMessage &#123;</span><br><span class="line">			klog.Errorf(<span class="string">&quot;Websocket message type must be %v type&quot;</span>, websocket.TextMessage)</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		message, err := stream.ReadMessageFromTunnel(r)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			klog.Errorf(<span class="string">&quot;Read message from tunnel %v error %v&quot;</span>, s.String(), err)</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> err := s.ProxyTunnelMessageToApiserver(message); err != <span class="literal">nil</span> &#123;</span><br><span class="line">			klog.Errorf(<span class="string">&quot;Proxy tunnel message [%s] to kube-apiserver error %v&quot;</span>, message.String(), err)</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>思考一下通过拦截流量实现穿透有什么弊端？</p>
+</blockquote>
+<h2 id="讲讲跳过的坑"><a href="#讲讲跳过的坑" class="headerlink" title="讲讲跳过的坑"></a>讲讲跳过的坑</h2><p>讲讲我在验证和学习kubeedge网络设计时的故事（坑爹过程）：</p>
+<ol>
+<li>Kubernetes的Node的<code>Status.daemonEndpoints.KubeletEndpoint.Port</code>你知道吗？
+其实当我们<code>kubectl exec</code>时，最终发起向kubelet请求，kubelet的端口就是由该字段确定。</li>
+<li>calico复杂的iptables规则，让容器的流量变得十分怪异，最终只能使用hostNetwork模式啦🤬</li>
+<li>你知道prometheus抓取端口时，会自动加上请求头<code>Accept-Encoding: gzip</code>，并且kubeedge tunnel目前不支持Binary Message吗？</li>
+<li>国家统计局相关统计数据表明，那两天我敲的curl命令可绕地球两圈，prometheus的重装次数高达百万次！👊</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>KubeEdge有非常良好的前景，这主要得力于<code>云边协同</code>的思想，虽然目前开源的KubeEdge整体的方案还不完善，但是，
+随着用户的增多和社区的发展，KubeEdge将会越来越成熟，对于想要加入KubeEdge社区的朋友，目前也是最佳时机。
+同时，我们基于KubeEdge所做的产品化工作目前还处于初级阶段，但是有了Kubernetes的产品化改造的经验，相关工作也在有条不紊的进行。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>除了官方仓库和文档，以下资料也十分有价值。</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://kccncna19.sched.com/event/Uahz">KubeEdge-Kubernetes Native Edge Computing Framework（2019-kubecon）</a></li>
+<li><a target="_blank" rel="noopener" href="https://kccncna19.sched.com/event/Uafu">KubeEdge Deep Dive(2019-kubecon)</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/LS5QnDwVIMVLTuB_yvdjoA">kubeEdge架构解读</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1LJ411D7t1">华为云课堂-KubeEdge实战宝典</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/32553477">QUIC-Quick UDP Internet Connection</a>下</li>
+</ol>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Holder</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.happyhack.io/2020/10/27/kubeedge-day-01/">https://blog.happyhack.io/2020/10/27/kubeedge-day-01/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.happyhack.io" target="_blank">Happy Hack Everday</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/kubeedge/">kubeedge</a><a class="post-meta__tags" href="/tags/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97/">边缘计算</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/donggangcj/CDN@master/image/kubeedge-day-01/2020-10-27-17-52-03.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/10/30/kubernetes-develop-tips/"><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubernetes-develop-tips/2020-10-29-17-40-18.webp" type="image/webp"><img class="prev-cover" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubernetes-develop-tips/2020-10-29-17-40-18.png" onerror="onerror=null;src='/img/404.jpg'"></picture><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">kubernetes平台开发者小技巧</div></div></a></div><div class="next-post pull-right"><a href="/2020/10/12/kubernetes-crd-day1/"><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubernetes-crd-day1/2020-10-12-14-01-00.webp" type="image/webp"><img class="next-cover" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubernetes-crd-day1/2020-10-12-14-01-00.png" onerror="onerror=null;src='/img/404.jpg'"></picture><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">使用kubebuilder开发简单的Operator</div></div></a></div></nav></article></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Holder</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@3/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script id="click-show-text" src="/js/third-party/ClickShowText.js" async="async" mobile="false"></script></div></body></html>

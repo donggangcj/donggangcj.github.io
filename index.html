@@ -1,0 +1,270 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Happy Hack Everday - Holder的博客</title><meta name="keywords" content="生活;Hack;云原生"><meta name="author" content="Holder"><meta name="copyright" content="Holder"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="Holder&#39;s Blog">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Happy Hack Everday">
+<meta property="og:url" content="https://blog.happyhack.io/index.html">
+<meta property="og:site_name" content="Happy Hack Everday">
+<meta property="og:description" content="Holder&#39;s Blog">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/logo.png">
+<meta property="article:author" content="Holder">
+<meta property="article:tag" content="生活;Hack;云原生">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/logo.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/faicon.png"><link rel="canonical" href="https://blog.happyhack.io/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.4.2',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: {"text":"富強,民主,文明,和諧,自由,平等,公正,法治,愛國,敬業,誠信,友善","fontSize":"15px"},
+  lightbox: 'mediumZoom',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isSidebar: false,
+  postUpdate: '2024-06-25 13:33:24'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {
+  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+
+  const autoChangeMode = '1'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }
+})()</script><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Happy Hack Everday" type="application/atom+xml">
+</head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/logo.webp" type="image/webp"><img class="avatar-img" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></picture></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">30</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">34</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 资源</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div></div></div></div><div id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/index.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Happy Hack Everday</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 资源</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="site-info"><h1 id="site-title">Happy Hack Everday</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/donggangcj" target="_blank" rel="noopener" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/atom.xml" target="_blank" rel="noopener" title="Rss"><i class="fas fa-rss"></i></a><a class="social-icon" href="mailto:donggangcj@gmail.com" target="_blank" rel="noopener" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://t.me/donggang" target="_blank" rel="noopener" title="Telgram"><i class="fab fa-telegram-plane"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout_page" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2024/06/25/multiple-git-useraccount/" title="multiple-git-useraccount">     <img class="post_bg" data-lazy-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="multiple-git-useraccount"></a></div><div class="recent-post-info"><a class="article-title" href="/2024/06/25/multiple-git-useraccount/" title="multiple-git-useraccount">multiple-git-useraccount</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-06-25T09:18:58.000Z" title="发表于 2024-06-25 15:18:58">2024-06-25</time></span></div><div class="content">
+
+如果你有多个 github 账户，一个个人用https://github.com/holder-office，一个公司用途https://github.com/holder-personal，本文将介绍如何在 MAC 上配置使用多个账号，当然，如果你有多个账号，同样也可以参照设置。
+可以分为以下五个步骤：
+
+为每个账号创建 ssh key
+将 ssh key 添加到 ssh agent
+将 ssh key 添加到 github
+配置 ssh config 文件
+使用不同账号克隆 github 仓库
+
+Step1确保当前目录处于 .ssh 目录
+123cd ~/.ssh
+
+创建 ssh key
+12ssh-keygen -t rsa -C &quot;holder-office@gmail.com&quot; -f &quot;github-holder-office&quot;ssh-keygen -t rsa -C &quot;holder-personal@gmail.com&quot; -f &quot;github-holder-personal&quot;
+
+输入命令后， ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2023/08/25/vscode-golang-remote-debug/" title="vscode-golang-远程调试">     <picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/vscode-golang-remote-debug/2023-08-25-10-37-45.webp" type="image/webp"><img class="post_bg" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/vscode-golang-remote-debug/2023-08-25-10-37-45.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="vscode-golang-远程调试"></picture></a></div><div class="recent-post-info"><a class="article-title" href="/2023/08/25/vscode-golang-remote-debug/" title="vscode-golang-远程调试">vscode-golang-远程调试</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-08-25T04:42:16.000Z" title="发表于 2023-08-25 10:42:16">2023-08-25</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/coding/">coding</a></span></div><div class="content">开发中进行调试能够帮助我们快速定位问题，同时也可以帮助我们梳理代码逻辑。相比日志输出，调试更能够在项目早期提升开发效率。在使用 golang 开发的前两年，我主要使用 goland 进行开发，goland 的调试功能是其相比于 vscode 的一大优势。在开发过程中，我们所开发项目通常不会运行本地或者开发机，可能是运行在一个远程集群中，依赖环境配置以及其他服务，goland 能够很方便的实现在本地开发，然后将程序拷贝到服务器，并对其进行调试。
+
+golang 只需要将远程服务器配置位一个 target，就可实现本地开发类似的效果。
+本文将介绍 vscode 借助其开发调试和任务特性，配置 launch.json 和 task.jsoan 文件实现golang 程序的一键远程调试的功能，执行调试，vscode 帮助完成所有以下步骤。
+
+编译程序，下面使用uvmt-agent进行演示。
+将编译好的程序和调试工具 dlv 拷贝到需要调试的机器上。
+在需要调试的机器上运行 dlv 通过 DAP 运行 headless server。
+vscode 连接远程机器上调试服务，开始调试。
+
+task ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2021/08/05/fio-and-etcd/" title="使用Fio测试存储性能是否满足etcd要求">     <picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/fio-and-etcd/2021-06-30-17-11-23.webp" type="image/webp"><img class="post_bg" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/fio-and-etcd/2021-06-30-17-11-23.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用Fio测试存储性能是否满足etcd要求"></picture></a></div><div class="recent-post-info"><a class="article-title" href="/2021/08/05/fio-and-etcd/" title="使用Fio测试存储性能是否满足etcd要求">使用Fio测试存储性能是否满足etcd要求</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-08-05T09:21:12.000Z" title="发表于 2021-08-05 15:21:12">2021-08-05</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a></span></div><div class="content">概要存储性能很大程度决定了etcd集群的性能表现，因为etcd必须持久化日志，一次写请求必须确保多数节点将用于保证状态机的日志写入磁盘中。
+在已经运行的 etcd 集群中，我们可以通过指标etcd_disk_wal_fysnc_duration_seconds来评估存储 I/O 性能，
+该指标记录了 WAL 文件系统调用 fsync 的延迟分布，当 99% 样本的同步时间小于 10 毫秒就可以认为存储性能能够满足 etcd 的性能要求。
+那么如何在部署实施前或没有监控系统的情况下，评估存储的性能是否满足需求呢？
+fio命令行工具可能是不错的选择，fio主要用于进行 I/O 性能测试，你可以使用下面的命令测试存储性能，以评估是否满足 etcd 的要求。
+1fio --rw=write --ioengine=sync --fdatasync=1 --directory=test-data --size=22m --bs=2300 --name=mytest
+
+观察输出，验证是否 99%的文件同步执行时间小于 10ms，下图用例的测试结果不满足要求。
+
+注意：
+
+参数--size和--bs的 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/10/30/kubernetes-develop-tips/" title="kubernetes平台开发者小技巧">     <picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubernetes-develop-tips/2020-10-29-17-40-18.webp" type="image/webp"><img class="post_bg" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubernetes-develop-tips/2020-10-29-17-40-18.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="kubernetes平台开发者小技巧"></picture></a></div><div class="recent-post-info"><a class="article-title" href="/2020/10/30/kubernetes-develop-tips/" title="kubernetes平台开发者小技巧">kubernetes平台开发者小技巧</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-10-30T10:39:16.000Z" title="发表于 2020-10-30 16:39:16">2020-10-30</time></span></div><div class="content">随着Cloud Native逐渐深入人心以及kubernetes的流行，国内外出现大量的kubernetes服务提供商，如红帽，阿里，腾讯等，
+同时许多互联网公司也在定制kubernetes以满足自身需求，kubernetes平台开发者这个岗位的需求也逐渐增大，
+那作为一名合格的kubernetes平台开发者其实需要具备一些特殊技能的。
+在这个系列博文中，我将结合自身的开发经历给Kubernetes平台开发者分享一些开发小技巧，帮助kubernetes平台开发者少走一些弯路。
+在你的项目使用依赖k8s.io/kubernetes主仓模块Kubernetes提供了很多公共库供开发者使用，
+比如client-go、apimachinery，但是官方不推荐直接依赖主仓k8s.io/kubernetes，虽然其代码完全是开源的，
+这样做最主要原因是直接依赖k8s.io/kubernetes会导致你的项目过大，包含太多不必要的文件。
+但是除了公共库已经拆分的通用模块，主仓还有很多有意义的API接口(函数)，比如包pkg/core/validation的ValidatePodCreate函数可以用 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/10/27/kubeedge-day-01/" title="kubeedge介绍">     <img class="post_bg" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN@master/image/kubeedge-day-01/2020-10-27-17-52-03.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="kubeedge介绍"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/10/27/kubeedge-day-01/" title="kubeedge介绍">kubeedge介绍</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-10-27T10:52:34.000Z" title="发表于 2020-10-27 16:52:34">2020-10-27</time></span></div><div class="content">KubeEdge即Kube加Edge，顾名思义就是依托k8s的容器编排能力和调度能力，实现云边协同、计算下沉、海量设备的平滑接入，
+旨在为边缘计算和IoT这两大物联网领域提供统一的平台方案，本次分享将给大家简单介绍目前KubeEdge项目进展，它的架构设计，以及我们基于KubeEdge做了哪些工作，
+并详细分析KubeEdge是如何解决云边网络通信问题的。
+
+本文主要内容取自一次我在公司的内部分享
+
+KubeEdge项目介绍KubeEdge是华为推出的业内首个开源边缘容器平台项目，是由华为云边缘计算产品IEF开源而来，Apache 2.0开源协议，并于2019年3月捐献给CNCF基金会，在2019年9月晋级为孵化级项目，
+在CNCF的社区建设上，KubeEdge积极参与kubernetes IoT Edge WG，同时也成立了Device/IoT与MEC两个SIG，可以说KubeEdge先发制人，
+在社区已经拥有了足够多话语权。目前参与社区贡献的企业包括：中国联通，ARM，中国移动，谐云，中国电信，时速云，JD.com，浙大SEL实验室，EMQ，
+InfoBlox，Inovex，Mid ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/10/12/kubernetes-crd-day1/" title="使用kubebuilder开发简单的Operator">     <picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubernetes-crd-day1/2020-10-12-14-01-00.webp" type="image/webp"><img class="post_bg" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubernetes-crd-day1/2020-10-12-14-01-00.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用kubebuilder开发简单的Operator"></picture></a></div><div class="recent-post-info"><a class="article-title" href="/2020/10/12/kubernetes-crd-day1/" title="使用kubebuilder开发简单的Operator">使用kubebuilder开发简单的Operator</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-10-12T07:58:28.000Z" title="发表于 2020-10-12 13:58:28">2020-10-12</time></span></div><div class="content">
+云原生技术通过方法论、工具集和最佳实践重塑着整个软件技术栈和生命周期，云原生对云计算服务方式与互联网架构进行整体性升级，
+深刻改变着整个 IT 领域。云原生的核心是 kubernetes，围绕 kubernetes 构建满足自身需求的 PaaS 平台(应用中心)是绝大数企业的诉求，
+但是不同企业自身场景往往存在一定的差异，Operator 是最常见 kubernetes 拓展方式。本片博文，我将会给大家理清 Operator 的来龙去脉，
+同时介绍如何通过 kubebuilder 快速开发一个简单的 Operator。
+Operator 诞生的背景
+kubernetes 无法做到真正意义的开箱即用的，它与传统的 PaaS 平台不同，它仅仅只提供核心的基础设施功能，但是还无法满足用户的最终需求，这里用户主要指业务开发和业务运维，
+比如说业务开发需要 CI/CD 工具实现 Devops 的功能，原生 kubernetes 是不提供支持的，但是我们可以通过tekton这一个第三方工具实现 DevOps 相关功能，
+这也正是 kubernetes 区别传统PaaS平台的真正强大之处，其提供完 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/07/16/upgrade-bash-on-macOS/" title="Mac安装新版本Bash">     <picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/upgrade-bash-on-macOS/2020-07-16-18-24-10.webp" type="image/webp"><img class="post_bg" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/upgrade-bash-on-macOS/2020-07-16-18-24-10.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Mac安装新版本Bash"></picture></a></div><div class="recent-post-info"><a class="article-title" href="/2020/07/16/upgrade-bash-on-macOS/" title="Mac安装新版本Bash">Mac安装新版本Bash</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-07-16T12:23:31.000Z" title="发表于 2020-07-16 18:23:31">2020-07-16</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E8%AF%91%E6%96%87/">译文</a></span></div><div class="content">很多macOS的用户开发者可能不知道他们一直在使用非常老版本的Bash shell，部分原因是很多用户使用的是zsh。
+但是，升级Bash其实是非常有意义的，除了能够使用新特性之外，还能够避免一些意外的错误。
+
+写在前面：我在给一些项目如kubernetes提PR时，项目中脚本经常执行不成功。还有进行Hack工具开发completion功能时，
+测试completion一直无法成功。问题的根源就是Bash版本的问题。虽然在日常开发过程中，我一直使用zsh，
+但是安装新版本Bash对于本地开发调试十分方便。
+
+Mac默认的Bash执行以下命令查看macOS内置Bash版本：
+123$ bash --versionGNU bash, version 3.2.57(1)-release (x86_64-apple-darwin18)Copyright (C) 2007 Free Software Foundation, Inc.
+
+可以发现，macOS使用的是3.2版本的GNU Bash，发行于2007年！到目前为止，即使是最新的MacOS，默认Bash都是这个版本。
+苹果在其操作系统上使用 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/07/14/efk/" title="EFK日志平台">     <picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/efk/2020-07-14-15-54-20.webp" type="image/webp"><img class="post_bg" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/efk/2020-07-14-15-54-20.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="EFK日志平台"></picture></a></div><div class="recent-post-info"><a class="article-title" href="/2020/07/14/efk/" title="EFK日志平台">EFK日志平台</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-07-14T14:33:49.000Z" title="发表于 2020-07-14 20:33:49">2020-07-14</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a></span></div><div class="content">云原生技术的宗旨是帮助企业组织在现代动态的环境下（公有云，私有云和混合云）高效管理应用的全生命周期，
+围绕kubernetes，用户可以灵活选择各个模块组件，搭建平台以满足多样需求。
+云原生风景图完整地展示了企业实践云原生所需要处理的问题。
+这张图很有参考意义。
+
+图中将日志，监控和链路追踪都放到了监控和分析，这是一个趋势，背负着统一OpenTrace和OpenCensue的OpenTelemetry就是为了实现Metrics、Tracing和Logging的融合。
+这三者的融合才是一个完整的用户故事。基于 Metrics 的告警及时发现异常，通过 Tracing 定位问题的模块，根据模块的日志找到问题的根源，
+最后基于问题，调整 Metrics(增加或者调整告警的阀值等)，以便下次可以更早发现或预防问题。
+日志，监控和链路追踪三中平台的基本架构是一致的：数据收集 -&gt; 数据处理 -&gt; 数据展示（告警），主要差异是数据源的不一致，
+所以搭建三套平台显然很冗余，也不便于维护管理。但是很可惜，目前很没有一套成熟的方案，不过相信随着社区的发展，不会等太久。 
+结合最近的工作，本片 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/07/04/build-own-cli-to-simplfy-workflow/" title="构建现代化命令化工具&amp;&amp;使用Golang构建命令行工具">     <picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/build-own-cli-to-simplfy-workflow/2020-07-03-21-58-08.webp" type="image/webp"><img class="post_bg" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/build-own-cli-to-simplfy-workflow/2020-07-03-21-58-08.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="构建现代化命令化工具&amp;&amp;使用Golang构建命令行工具"></picture></a></div><div class="recent-post-info"><a class="article-title" href="/2020/07/04/build-own-cli-to-simplfy-workflow/" title="构建现代化命令化工具&amp;&amp;使用Golang构建命令行工具">构建现代化命令化工具&amp;&amp;使用Golang构建命令行工具</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-07-03T16:09:21.000Z" title="发表于 2020-07-03 22:09:21">2020-07-03</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/coding/">coding</a></span></div><div class="content">现代化命令行工具相比于传统命令行工具，其汲取了现代 web 的优秀的 UI 和交互设计，所以对用户更加友好，
+同时也保留了命令行操作的高效性，能让用户体会到hack的乐趣。本片博文，将给大家讨论如何构建现代化命令行工具。
+首先我会结合自身的经历，来谈谈为什么命令行是高效的，然后对比两组常用且核心功能相同的命令行工具，
+让大家知道现代命令行工具一般具备哪些特征，最后依据这些特征，给大家总结使用 go 语言构建现代命令行的过程，
+以及常用的库。
+为什么偏爱命令行作为一位 Hacker，我十分推崇键盘操作模式和以终端为中心的工作模式这两种理念哲学。很大程度上，这两种理念哲学是 Hacker 文化的重要部分。
+键盘操作，与之相对应的是鼠标（触屏等）操作，这两种模式是目前的主流人机交互方式。对于使用过VIM和Word两种工具的用户，
+会很容易理解，两种模式的区别。word如今使用更加广泛，并且鼠标操作模式也一直是主流，而VIM的使用人群则相对固定（开发者），
+对于一个深度使用VIM的人是很难抛弃它，VIM 吸引用户的魔力正是键盘操作模式，而 VIM 正是以键盘为中心操作模式的代表，
+这种设计哲学 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/06/28/blog-day5/" title="博客优化：Hexo支持webp格式&amp;&amp;迁移到香港云主机">     <picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/blog-day5/2020-06-24-10-42-28.webp" type="image/webp"><img class="post_bg" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/blog-day5/2020-06-24-10-42-28.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="博客优化：Hexo支持webp格式&amp;&amp;迁移到香港云主机"></picture></a></div><div class="recent-post-info"><a class="article-title" href="/2020/06/28/blog-day5/" title="博客优化：Hexo支持webp格式&amp;&amp;迁移到香港云主机">博客优化：Hexo支持webp格式&amp;&amp;迁移到香港云主机</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-06-28T11:22:12.000Z" title="发表于 2020-06-28 17:22:12">2020-06-28</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E5%8D%9A%E5%AE%A2/">博客</a></span></div><div class="content">最近使用lighthouse对博客做了一个测试，测试结果如下，以下是桌面 PC 端的测试的结果：
+
+下图是一个优秀个人博客网站的测试结果，通过对比可以发现有很大差距。
+
+这个测试能够一定程度反映网站的用户体验，测试主要包含性能，可访问性，SEO和最佳实践四个方面。通过测试，我们能发现网站存在的问题，
+同时lighthouse工具也提供关于这些问题的一些改进建议。其中很多问题网上已经有优化方案了，我们就不再搬运了，但是关于Hexo建站如何优雅使用webp图片格式的问题，
+还没有成熟的方案，本片博文将给大家分享我是如何实现 Hexo 兼容webp格式图片，且做到无感知，全自动化的管理的；
+同时也会简单介绍通过将博客迁移到香港云主机，优化国内读者的访问速度的过程。
+图片资源优化技术类文章不可避免地需要大量的配图，同时随着博客文章的图片的增多，偶尔出现几 M 大小的图片，博客页面加载就会变慢，影响读者的阅读体验。
+缩小页面的中配图的大小，加速博文渲染速度迫在眉睫，但是最终实现不能以牺牲图片的质量和显示效果为代价。查阅相关资料，我尝试了从以下两种思路进行优化。
+第一种思路是使用压缩工具将过大的 ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/logo.webp" type="image/webp"><img class="avatar-img" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/logo.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></picture><div class="author-info__name">Holder</div><div class="author-info__description">Holder's Blog</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length_num">30</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length_num">34</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length_num">6</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/donggangcj" target="_blank" rel="noopener" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/atom.xml" target="_blank" rel="noopener" title="Rss"><i class="fas fa-rss"></i></a><a class="social-icon" href="mailto:donggangcj@gmail.com" target="_blank" rel="noopener" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://t.me/donggang" target="_blank" rel="noopener" title="Telgram"><i class="fab fa-telegram-plane"></i></a></div></div></div><div class="sticky_layout"><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">专注云原生技术</div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/06/25/multiple-git-useraccount/" title="multiple-git-useraccount"><img data-lazy-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="multiple-git-useraccount"/></a><div class="content"><a class="title" href="/2024/06/25/multiple-git-useraccount/" title="multiple-git-useraccount">multiple-git-useraccount</a><time datetime="2024-06-25T09:18:58.000Z" title="发表于 2024-06-25 15:18:58">2024-06-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/08/25/vscode-golang-remote-debug/" title="vscode-golang-远程调试"><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/vscode-golang-remote-debug/2023-08-25-10-37-45.webp" type="image/webp"><img data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/vscode-golang-remote-debug/2023-08-25-10-37-45.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="vscode-golang-远程调试"/></picture></a><div class="content"><a class="title" href="/2023/08/25/vscode-golang-remote-debug/" title="vscode-golang-远程调试">vscode-golang-远程调试</a><time datetime="2023-08-25T04:42:16.000Z" title="发表于 2023-08-25 10:42:16">2023-08-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/05/fio-and-etcd/" title="使用Fio测试存储性能是否满足etcd要求"><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/fio-and-etcd/2021-06-30-17-11-23.webp" type="image/webp"><img data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/fio-and-etcd/2021-06-30-17-11-23.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用Fio测试存储性能是否满足etcd要求"/></picture></a><div class="content"><a class="title" href="/2021/08/05/fio-and-etcd/" title="使用Fio测试存储性能是否满足etcd要求">使用Fio测试存储性能是否满足etcd要求</a><time datetime="2021-08-05T09:21:12.000Z" title="发表于 2021-08-05 15:21:12">2021-08-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/10/30/kubernetes-develop-tips/" title="kubernetes平台开发者小技巧"><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubernetes-develop-tips/2020-10-29-17-40-18.webp" type="image/webp"><img data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/kubernetes-develop-tips/2020-10-29-17-40-18.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="kubernetes平台开发者小技巧"/></picture></a><div class="content"><a class="title" href="/2020/10/30/kubernetes-develop-tips/" title="kubernetes平台开发者小技巧">kubernetes平台开发者小技巧</a><time datetime="2020-10-30T10:39:16.000Z" title="发表于 2020-10-30 16:39:16">2020-10-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/10/27/kubeedge-day-01/" title="kubeedge介绍"><img data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN@master/image/kubeedge-day-01/2020-10-27-17-52-03.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="kubeedge介绍"/></a><div class="content"><a class="title" href="/2020/10/27/kubeedge-day-01/" title="kubeedge介绍">kubeedge介绍</a><time datetime="2020-10-27T10:52:34.000Z" title="发表于 2020-10-27 16:52:34">2020-10-27</time></div></div></div></div></div><div class="card-widget card-categories"><div class="card-content"><div class="item-headline"><i class="fas fa-folder-open"></i><span>分类</span></div><ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/coding/"><span class="card-category-list-name">coding</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/python/"><span class="card-category-list-name">python</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/"><span class="card-category-list-name">云原生</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2/"><span class="card-category-list-name">博客</span><span class="card-category-list-count">5</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%94%9F%E6%B4%BB/"><span class="card-category-list-name">生活</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E8%AF%91%E6%96%87/"><span class="card-category-list-name">译文</span><span class="card-category-list-count">2</span></a></li>
+            
+            </ul></div></div><div class="card-widget card-tags"><div class="card-content"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/CLI/" style="font-size: 1.1em; color: #999">CLI</a> <a href="/tags/Go-Module/" style="font-size: 1.1em; color: #999">Go Module</a> <a href="/tags/Golang/" style="font-size: 1.1em; color: #999">Golang</a> <a href="/tags/Helm/" style="font-size: 1.1em; color: #999">Helm</a> <a href="/tags/Mac/" style="font-size: 1.1em; color: #999">Mac</a> <a href="/tags/Shell/" style="font-size: 1.1em; color: #999">Shell</a> <a href="/tags/Spring-Boot/" style="font-size: 1.1em; color: #999">Spring Boot</a> <a href="/tags/api%E8%AE%BE%E8%AE%A1/" style="font-size: 1.1em; color: #999">api设计</a> <a href="/tags/chrome-devtool/" style="font-size: 1.1em; color: #999">chrome devtool</a> <a href="/tags/docker/" style="font-size: 1.2em; color: #999da3">docker</a> <a href="/tags/etcd/" style="font-size: 1.1em; color: #999">etcd</a> <a href="/tags/fio/" style="font-size: 1.1em; color: #999">fio</a> <a href="/tags/go/" style="font-size: 1.2em; color: #999da3">go</a> <a href="/tags/golang/" style="font-size: 1.3em; color: #99a1ac">golang</a> <a href="/tags/hexo/" style="font-size: 1.5em; color: #99a9bf">hexo</a> <a href="/tags/kubeedge/" style="font-size: 1.1em; color: #999">kubeedge</a> <a href="/tags/kubernetes/" style="font-size: 1.4em; color: #99a5b6">kubernetes</a> <a href="/tags/kubernetes%E5%AD%98%E5%82%A8/" style="font-size: 1.1em; color: #999">kubernetes存储</a> <a href="/tags/kubernetes%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91%E8%80%85/" style="font-size: 1.2em; color: #999da3">kubernetes平台开发者</a> <a href="/tags/log/" style="font-size: 1.2em; color: #999da3">log</a> <a href="/tags/operator/" style="font-size: 1.1em; color: #999">operator</a> <a href="/tags/python/" style="font-size: 1.1em; color: #999">python</a> <a href="/tags/spring/" style="font-size: 1.1em; color: #999">spring</a> <a href="/tags/vscode/" style="font-size: 1.1em; color: #999">vscode</a> <a href="/tags/workflow/" style="font-size: 1.1em; color: #999">workflow</a> <a href="/tags/%E4%BA%8B%E5%8A%A1/" style="font-size: 1.1em; color: #999">事务</a> <a href="/tags/%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" style="font-size: 1.1em; color: #999">年度总结</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 1.1em; color: #999">并发</a> <a href="/tags/%E6%97%A5%E5%BF%97%E5%B9%B3%E5%8F%B0/" style="font-size: 1.1em; color: #999">日志平台</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 1.1em; color: #999">架构</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 1.1em; color: #999">源码分析</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" style="font-size: 1.1em; color: #999">自动化</a> <a href="/tags/%E8%AF%91%E6%96%87/" style="font-size: 1.1em; color: #999">译文</a> <a href="/tags/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97/" style="font-size: 1.1em; color: #999">边缘计算</a></div></div></div><div class="card-widget card-archives"><div class="card-content"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/06/"><span class="card-archive-list-date">六月 2024</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/08/"><span class="card-archive-list-date">八月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/08/"><span class="card-archive-list-date">八月 2021</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/10/"><span class="card-archive-list-date">十月 2020</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/07/"><span class="card-archive-list-date">七月 2020</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/06/"><span class="card-archive-list-date">六月 2020</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/05/"><span class="card-archive-list-date">五月 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/04/"><span class="card-archive-list-date">四月 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item more is-center"><a class="card-archive-list-link-more" href="/archives/">
+              <span>查看更多</span><i class="fas fa-angle-right"  ></i></a></li></ul></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Holder</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@3/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function subtitleType () {
+  if (true) { 
+    var typed = new Typed("#subtitle", {
+      strings: "Talk is cheap show me the code,Never put off till tomorrow what you can do today,后来 我学会演一个傻子把天聊死 故意听不懂任何暗示 看穿了所有套路 对任何人没兴趣".split(","),
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50
+    })
+  } else {
+    document.getElementById("subtitle").innerHTML = 'Talk is cheap show me the code'
+  }
+}
+
+if (true) {
+  if (typeof Typed === 'function') subtitleType()
+  else $.getScript('https://cdn.jsdelivr.net/npm/typed.js', subtitleType)
+} else {
+  subtitleType()
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script id="click-show-text" src="/js/third-party/ClickShowText.js" async="async" mobile="false"></script></div></body></html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Helm:kubernetes包管理工具 | Happy Hack Everday</title><meta name="keywords" content="Helm"><meta name="author" content="Holder"><meta name="copyright" content="Holder"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="最近给部门的小伙伴做了一个关于helm的入门介绍，收到了不错的反响，于将资料整理分享给博客的读者们。 本文第一部分介绍helm是做什么的以及能解决什么问题。第二部分介绍helm的核心概念及安装使用helm的教程， 第三部分介绍helm使用的核心即chart的开发，这一章节通过一个示例给大家演示基本的开发步骤。最后一部分, 简单说明如何搭建私有模板仓。在读完后，相信你会对Helm及生态有一个简单的了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Helm:kubernetes包管理工具">
+<meta property="og:url" content="https://blog.happyhack.io/2020/03/30/helm/index.html">
+<meta property="og:site_name" content="Happy Hack Everday">
+<meta property="og:description" content="最近给部门的小伙伴做了一个关于helm的入门介绍，收到了不错的反响，于将资料整理分享给博客的读者们。 本文第一部分介绍helm是做什么的以及能解决什么问题。第二部分介绍helm的核心概念及安装使用helm的教程， 第三部分介绍helm使用的核心即chart的开发，这一章节通过一个示例给大家演示基本的开发步骤。最后一部分, 简单说明如何搭建私有模板仓。在读完后，相信你会对Helm及生态有一个简单的了">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-14-09-19.png">
+<meta property="article:published_time" content="2020-03-30T03:10:46.000Z">
+<meta property="article:modified_time" content="2024-06-20T02:29:28.116Z">
+<meta property="article:author" content="Holder">
+<meta property="article:tag" content="Helm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-14-09-19.png"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/faicon.png"><link rel="canonical" href="https://blog.happyhack.io/2020/03/30/helm/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.4.2',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: {"text":"富強,民主,文明,和諧,自由,平等,公正,法治,愛國,敬業,誠信,友善","fontSize":"15px"},
+  lightbox: 'mediumZoom',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2024-06-20 08:29:28'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {
+  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+
+  const autoChangeMode = '1'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }
+})()</script><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Happy Hack Everday" type="application/atom+xml">
+</head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/logo.webp" type="image/webp"><img class="avatar-img" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></picture></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">30</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">34</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 资源</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-helm"><span class="toc-number">1.</span> <span class="toc-text">什么是 helm</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="toc-number">1.1.</span> <span class="toc-text">什么是包管理工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-number">1.2.</span> <span class="toc-text">核心概念</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#helm-%E5%8F%91%E5%B1%95"><span class="toc-number">2.</span> <span class="toc-text">helm 发展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#helm-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">helm 如何使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#helm-%E5%AE%89%E8%A3%85"><span class="toc-number">3.1.</span> <span class="toc-text">helm 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chart"><span class="toc-number">3.2.</span> <span class="toc-text">chart</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Chart"><span class="toc-number">3.3.</span> <span class="toc-text">安装 Chart</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E5%80%BC"><span class="toc-number">3.4.</span> <span class="toc-text">使用自定义值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B-release-%E7%8A%B6%E6%80%81"><span class="toc-number">3.5.</span> <span class="toc-text">查看 release 状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E8%BF%90%E8%A1%8C%E7%9A%84-release"><span class="toc-number">3.6.</span> <span class="toc-text">查看所有运行的 release</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%87%E7%BA%A7-release"><span class="toc-number">3.7.</span> <span class="toc-text">升级 release</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E6%BB%9A-release"><span class="toc-number">3.8.</span> <span class="toc-text">回滚 release</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E9%99%A4%E4%B8%80%E4%B8%AA-release"><span class="toc-number">3.9.</span> <span class="toc-text">移除一个 release</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#helm-chart-%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91"><span class="toc-number">4.</span> <span class="toc-text">helm chart 如何开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#chart-%E5%BC%80%E5%8F%91%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7"><span class="toc-number">4.1.</span> <span class="toc-text">chart 开发核心特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA-chart-Demo"><span class="toc-number">4.2.</span> <span class="toc-text">开发一个 chart Demo</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93"><span class="toc-number">5.</span> <span class="toc-text">搭建私有仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E4%B8%8E%E6%96%B9%E6%A1%88"><span class="toc-number">5.1.</span> <span class="toc-text">定义与方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%AD%E5%BB%BAchart-repo-demo"><span class="toc-number">5.2.</span> <span class="toc-text">搭建chart repo demo</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E5%8F%A5%E8%AF%9D"><span class="toc-number">6.</span> <span class="toc-text">一句话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-14-09-19.png)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Happy Hack Everday</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 资源</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">Helm:kubernetes包管理工具</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-03-30T03:10:46.000Z" title="发表于 2020-03-30 09:10:46">2020-03-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-20T02:29:28.116Z" title="更新于 2024-06-20 08:29:28">2024-06-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p>最近给部门的小伙伴做了一个关于<code>helm</code>的入门介绍，收到了不错的反响，于将资料整理分享给博客的读者们。
+本文第一部分介绍<code>helm</code>是做什么的以及能解决什么问题。第二部分介绍<code>helm</code>的核心概念及安装使用<code>helm</code>的教程，
+第三部分介绍<code>helm</code>使用的核心即<code>chart</code>的开发，这一章节通过一个示例给大家演示基本的开发步骤。最后一部分,
+简单说明如何搭建私有模板仓。在读完后，相信你会对<code>Helm</code>及生态有一个简单的了解。</p>
+<h2 id="什么是-helm"><a href="#什么是-helm" class="headerlink" title="什么是 helm"></a>什么是 helm</h2><p>如标题所示，官方给<code>Helm</code>的定义是 kubernetes 的包管理器。那么什么是包管理器呢？</p>
+<h3 id="什么是包管理工具"><a href="#什么是包管理工具" class="headerlink" title="什么是包管理工具"></a>什么是包管理工具</h3><blockquote>
+<p>包管理器一组软件工具，它们以一致的方式自动安装、升级、配置和删除计算机操作系统的计算机程序 -维基百科<br>helm 帮助用户管理 kubernetes 程序，helm chart 帮助用户定义、安装和升级最复杂的 Kubernetes 应用程序,Charts 很容易
+创建，版本管理，共享和发布，所以停止 copy-and-paste,开始使用 helm -helm 官方</p>
+</blockquote>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-11-48-57.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-11-48-57.png" alt></picture></p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-23-31.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-23-31.png" alt></picture></p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-24-05.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-24-05.png" alt></picture></p>
+<h3 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h3><p><code>helm</code>的官方文档中的描述更加详细，这里只列出一些重要的概念：</p>
+<table>
+<thead>
+<tr>
+<th>Helm Concept</th>
+<th>描述</th>
+<th>重点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chart(unpackaged)</td>
+<td>一个文件夹的文件，遵循 chart 的准则</td>
+<td>可以直接部署到集群</td>
+</tr>
+<tr>
+<td>Chart(packaged)</td>
+<td>上述文件的压缩包 tar.gz</td>
+<td>可以直接部署到集群</td>
+</tr>
+<tr>
+<td>Chart name</td>
+<td>Chart.yaml 定义包的名称</td>
+<td>部分标识 chart</td>
+</tr>
+<tr>
+<td>Templates</td>
+<td>构成应用程序的一组 Kubernetes 清单</td>
+<td>Golang 模板引擎</td>
+</tr>
+<tr>
+<td>Values</td>
+<td>可以在 Kubernetes 清单中参数化的设置</td>
+<td>用于 template 渲染</td>
+</tr>
+<tr>
+<td>Chart version</td>
+<td>chart 版本</td>
+<td>部分标示 chart</td>
+</tr>
+<tr>
+<td>App Version</td>
+<td>chart 中包含的应用程序版本</td>
+<td>与 chart 版本独立</td>
+</tr>
+<tr>
+<td>Release</td>
+<td>kubernetes 集群中部署的 chart</td>
+<td>同一个 chart 可能部署多个 release</td>
+</tr>
+<tr>
+<td>Release name</td>
+<td>release 任意名称</td>
+<td>独立于 chart name</td>
+</tr>
+<tr>
+<td>Release Revision</td>
+<td>每次部署/升级应用程序时递增的数字</td>
+<td>于 chart 版本无关</td>
+</tr>
+</tbody></table>
+<h2 id="helm-发展"><a href="#helm-发展" class="headerlink" title="helm 发展"></a>helm 发展</h2><ul>
+<li>每个月超过百万次下载</li>
+<li>CNCF Incubating project</li>
+<li>繁荣的社区</li>
+</ul>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-25-32.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-25-32.png" alt></picture></p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-25-58.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-25-58.png" alt></picture></p>
+<h2 id="helm-如何使用"><a href="#helm-如何使用" class="headerlink" title="helm 如何使用"></a>helm 如何使用</h2><h3 id="helm-安装"><a href="#helm-安装" class="headerlink" title="helm 安装"></a>helm 安装</h3><p><code>helm3</code>剔除了服务 Tiller,直接与<code>kubernetes apiserver</code>通信，所以安装相比<code>helm2</code>更加简单。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># mac通过homebrew安装</span></span><br><span class="line">brew install helm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 二进制文件</span></span><br><span class="line">wget https://github.com/helm/helm/releases/helm-v3.0.0-linux-amd6</span><br><span class="line">tar -zvxf helm-v3.0.0-linux-amd6</span><br><span class="line">mv linux-amd64/helm /usr/<span class="built_in">local</span>/bin/helm</span><br></pre></td></tr></table></figure>
+
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-30-21.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-30-21.png" alt></picture></p>
+<blockquote>
+<p>对于需要从 Helm2 升级到 helm3 的用户，官方提供了升级插件，我是使用插件进行升级的，没有遇到问题。</p>
+</blockquote>
+<h3 id="chart"><a href="#chart" class="headerlink" title="chart"></a>chart</h3><p><code>chart</code>：一个包含足够信息的 Helm 包，用于将一组 Kubernetes 资源安装到 Kubernetes 集群中。</p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-31-48.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-31-48.png" alt></picture></p>
+<p>helm 命令行工具能够自动生成一个 chart 结构：<code>helm create myapp</code></p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-31-34.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-31-34.png" alt></picture></p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-32-10.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-32-10.png" alt></picture></p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-32-27.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-32-27.png" alt></picture></p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-32-49.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-32-49.png" alt></picture></p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-33-08.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-33-08.png" alt></picture></p>
+<p><code>templates</code>包含了所有所需 kubernetes 各个资源的模板文件，<code>Value.yaml</code>文件存储<code>chart</code>的默认值，
+这些值可以通过<code>helm install ,helm upgrade</code>更新，<code>Chart.yaml</code>包含了<code>chart</code>的描述信息，如版本，名称等。
+<code>charts</code>目录存储其依赖的第三方<code>chart</code>。</p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-33-42.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-33-42.png" alt></picture></p>
+<h3 id="安装-Chart"><a href="#安装-Chart" class="headerlink" title="安装 Chart"></a>安装 Chart</h3><p>在根据正在运行的 Kubernetes 集群进行身份验证的环境中，使用 Helm 从本地 chart 目录或 chart repo 安装。</p>
+<p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-34-32.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-34-32.png" alt></picture></p>
+<h3 id="使用自定义值"><a href="#使用自定义值" class="headerlink" title="使用自定义值"></a>使用自定义值</h3><p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-35-06.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-35-06.png" alt></picture></p>
+<h3 id="查看-release-状态"><a href="#查看-release-状态" class="headerlink" title="查看 release 状态"></a>查看 release 状态</h3><p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-35-39.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-35-39.png" alt></picture></p>
+<h3 id="查看所有运行的-release"><a href="#查看所有运行的-release" class="headerlink" title="查看所有运行的 release"></a>查看所有运行的 release</h3><p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-36-00.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-36-00.png" alt></picture></p>
+<h3 id="升级-release"><a href="#升级-release" class="headerlink" title="升级 release"></a>升级 release</h3><p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-36-18.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-36-18.png" alt></picture></p>
+<h3 id="回滚-release"><a href="#回滚-release" class="headerlink" title="回滚 release"></a>回滚 release</h3><p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-36-56.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-36-56.png" alt></picture></p>
+<h3 id="移除一个-release"><a href="#移除一个-release" class="headerlink" title="移除一个 release"></a>移除一个 release</h3><p><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-37-28.webp" type="image/webp"><img src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-13-37-28.png" alt></picture></p>
+<h2 id="helm-chart-如何开发"><a href="#helm-chart-如何开发" class="headerlink" title="helm chart 如何开发"></a>helm chart 如何开发</h2><p><code>chart</code>的开发是<code>Helm</code>的核心，也比较复杂。<code>Helm</code>使用<code>Go</code>模板对资源文件进行模板化,除了<code>Go</code>附带的几个内置函数，还添加了许多其他函数。</p>
+<h3 id="chart-开发核心特性"><a href="#chart-开发核心特性" class="headerlink" title="chart 开发核心特性"></a>chart 开发核心特性</h3><p>以下列举了<code>helm chart</code>开发中几个核心知识点，这里只简单罗列，如果你需要使用，还是建议参考官方文档。</p>
+<ol>
+<li>内置对象：<code>Release,Values,Chart,Files</code>；</li>
+<li>Values 文件，<code>--set</code>&gt;<code>-f customValue</code>&gt; default file；</li>
+<li>模板函数及流水线：对传入 template 的值进行轻度处理，helm 内置了 60 多个常见函数；</li>
+<li>控制语句的使用；</li>
+<li>变量；</li>
+<li>命名模版；</li>
+<li>访问 templates 中的文件；</li>
+<li>帮助文件 NOTS.Txt 如何编写；</li>
+<li>subcharts 与全局变量；</li>
+<li>.helmignore 文件忽略不需要的文件；</li>
+<li>chart 开发如何进行调试：<code>helm lint</code>,<code>helm install --dry-run --debug</code>,<code>helm get manifest</code>；</li>
+</ol>
+<h3 id="开发一个-chart-Demo"><a href="#开发一个-chart-Demo" class="headerlink" title="开发一个 chart Demo"></a>开发一个 chart Demo</h3><p>我们通过一个<code>Go</code>web 程序<code>iim</code>，来演示开发一个 chart 的完整流程。web 应用镜像已经推送到镜像仓中。</p>
+<ol>
+<li>首先在项目中创建 chart 目录，我们使用<code>helm create iim</code>工具生成。其中<code>templates</code>会自动生成 deployment,service
+,serviceaccount 资源文件，以及自定义帮助文件模板。我们可以移除一些不必要的文件，如 serviceaccount,因为这里不需要使用这些 kubernetes 资源；
+_ <code>NOTES.txt</code>:关于应用的帮助信息，如访问地址
+_ <code>_helpers.tpl</code>: 放置 chart 帮助程序的地方，便于后续重用</li>
+<li>修改 deployment.yaml，添加入口程序参数。</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> &#123; &#123; <span class="string">.Chart.Name</span> &#125; &#125;</span><br><span class="line">    <span class="attr">securityContext:</span> &#123; &#123; <span class="bullet">-</span> <span class="string">toYaml</span> <span class="string">.Values.securityContext</span> <span class="string">|</span> <span class="string">nindent</span> <span class="number">12</span> &#125; &#125;</span><br><span class="line">    <span class="attr">image:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; .Values.image.repository &#125;&#125;</span>:<span class="template-variable">&#123;&#123; .Chart.AppVersion &#125;&#125;</span>&quot;</span></span><br><span class="line">    <span class="attr">imagePullPolicy:</span> &#123; &#123; <span class="string">.Values.image.pullPolicy</span> &#125; &#125;</span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&quot;./iimserver&quot;</span>]</span><br><span class="line">    <span class="attr">args:</span></span><br><span class="line">      [</span><br><span class="line">        <span class="string">&quot;-c&quot;</span>,</span><br><span class="line">        <span class="string">&quot;/app/config.toml&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-m&quot;</span>,</span><br><span class="line">        <span class="string">&quot;/app/model.conf&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-menu&quot;</span>,</span><br><span class="line">        <span class="string">&quot;/app/menu.json&quot;</span>,</span><br><span class="line">      ]</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>修改程序默认配置,即 Value.yaml 文件</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">replicaCount:</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="attr">image:</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">daocloud.io/daocloud/iim-backend</span></span><br><span class="line">  <span class="attr">pullPolicy:</span> <span class="string">IfNotPresent</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>修改程序说明文件，即<code>Chart.yaml</code>文件</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v2</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">iim</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">工业机理模型冲刺项目</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">application</span></span><br><span class="line"><span class="attr">version:</span> <span class="number">0.1</span><span class="number">.0</span></span><br><span class="line"><span class="attr">appVersion:</span> <span class="number">0.2</span><span class="number">.9</span></span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>检测<code>Chart</code>是否合法</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 校验</span></span><br><span class="line">helm lint</span><br><span class="line"><span class="comment"># 显示模板渲染结果</span></span><br><span class="line">helm install iim-dmep --dry-run --debug .</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>运行</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">➜  iim git:(haier-shanghai) ✗ helm install iim .</span><br><span class="line">NAME: iim</span><br><span class="line">LAST DEPLOYED: Thu Feb 13 16:59:25 2020</span><br><span class="line">NAMESPACE: default</span><br><span class="line">STATUS: deployed</span><br><span class="line">REVISION: 1</span><br><span class="line">NOTES:</span><br><span class="line">1. Get the application URL by running these commands:</span><br><span class="line">  <span class="built_in">export</span> POD_NAME=$(kubectl get pods --namespace default -l <span class="string">&quot;app.kubernetes.io/name=iim,app.kubernetes.io/instance=iim&quot;</span> -o jsonpath=<span class="string">&quot;&#123;.items[0].metadata.name&#125;&quot;</span>)</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Visit http://127.0.0.1:8080 to use your application&quot;</span></span><br><span class="line">  kubectl --namespace default port-forward <span class="variable">$POD_NAME</span> 8080:80</span><br><span class="line"></span><br><span class="line">➜  iim git:(haier-shanghai) ✗ kubectl get pods</span><br><span class="line">NAME                                       READY   STATUS    RESTARTS   AGE</span><br><span class="line">chartmuseum-chartmuseum-795fb657bd-7h9hw   1/1     Running   0          3h51m</span><br><span class="line">iim-d4567c587-8zzpj                        0/1     Running   0          40s</span><br></pre></td></tr></table></figure>
+
+<h2 id="搭建私有仓库"><a href="#搭建私有仓库" class="headerlink" title="搭建私有仓库"></a>搭建私有仓库</h2><h3 id="定义与方案"><a href="#定义与方案" class="headerlink" title="定义与方案"></a>定义与方案</h3><p><code>a chart repository</code>存储和共享打包好的<code>charts</code>。<a target="_blank" rel="noopener" href="https://github.com/helm/charts">官方 chart repository</a>维护了许多常用中间件的<code>chart</code>。
+本质上，一个<code>chart repo</code>就是一个普通的 http server,其包含一个<code>index.yaml</code>文件和一些<code>packaged chart</code>。
+<code>index.yaml</code>定义了<code>chart repo</code>的元数据。因此，用户可以使用<code>Google Cloud Storage bucket,Amazon S3 bucket,Github Page</code>去搭建私有仓。</p>
+<p><code>https://example.com/charts</code>这个 chart repo 的布局如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">charts/</span><br><span class="line">  |</span><br><span class="line">  |- index.yaml</span><br><span class="line">  |</span><br><span class="line">  |- alpine-0.1.2.tgz</span><br><span class="line">  |</span><br><span class="line">  |- alpine-0.1.2.tgz.prov</span><br></pre></td></tr></table></figure>
+
+<p>其中的<code>index.yaml</code>内容如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">entries:</span></span><br><span class="line">  <span class="attr">alpine:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">created:</span> <span class="number">2016-10-06T16:23:20.499814565-06:00</span></span><br><span class="line">      <span class="attr">description:</span> <span class="string">Deploy</span> <span class="string">a</span> <span class="string">basic</span> <span class="string">Alpine</span> <span class="string">Linux</span> <span class="string">pod</span></span><br><span class="line">      <span class="attr">digest:</span> <span class="string">99c76e403d752c84ead610644d4b1c2f2b453a74b921f422b9dcb8a7c8b559cd</span></span><br><span class="line">      <span class="attr">home:</span> <span class="string">https://helm.sh/helm</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">alpine</span></span><br><span class="line">      <span class="attr">sources:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">https://github.com/helm/helm</span></span><br><span class="line">      <span class="attr">urls:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">https://technosophos.github.io/tscharts/alpine-0.2.0.tgz</span></span><br><span class="line">      <span class="attr">version:</span> <span class="number">0.2</span><span class="number">.0</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">created:</span> <span class="number">2016-10-06T16:23:20.499543808-06:00</span></span><br><span class="line">      <span class="attr">description:</span> <span class="string">Deploy</span> <span class="string">a</span> <span class="string">basic</span> <span class="string">Alpine</span> <span class="string">Linux</span> <span class="string">pod</span></span><br><span class="line">      <span class="attr">digest:</span> <span class="string">515c58e5f79d8b2913a10cb400ebb6fa9c77fe813287afbacf1a0b897cd78727</span></span><br><span class="line">      <span class="attr">home:</span> <span class="string">https://helm.sh/helm</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">alpine</span></span><br><span class="line">      <span class="attr">sources:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">https://github.com/helm/helm</span></span><br><span class="line">      <span class="attr">urls:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">https://technosophos.github.io/tscharts/alpine-0.1.0.tgz</span></span><br><span class="line">      <span class="attr">version:</span> <span class="number">0.1</span><span class="number">.0</span></span><br><span class="line">  <span class="attr">nginx:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">created:</span> <span class="number">2016-10-06T16:23:20.499543808-06:00</span></span><br><span class="line">      <span class="attr">description:</span> <span class="string">Create</span> <span class="string">a</span> <span class="string">basic</span> <span class="string">nginx</span> <span class="string">HTTP</span> <span class="string">server</span></span><br><span class="line">      <span class="attr">digest:</span> <span class="string">aaff4545f79d8b2913a10cb400ebb6fa9c77fe813287afbacf1a0b897cdffffff</span></span><br><span class="line">      <span class="attr">home:</span> <span class="string">https://helm.sh/helm</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">sources:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">https://github.com/helm/charts</span></span><br><span class="line">      <span class="attr">urls:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">https://technosophos.github.io/tscharts/nginx-1.1.0.tgz</span></span><br><span class="line">      <span class="attr">version:</span> <span class="number">1.1</span><span class="number">.0</span></span><br><span class="line"><span class="attr">generated:</span> <span class="number">2016-10-06T16:23:20.499029981-06:00</span></span><br></pre></td></tr></table></figure>
+
+<p><code>ChartMuseum</code>是开源的<code>helm chart repository</code>,使用<code>Golang</code>开发，并且对主流的云存储
+都有支持。其本身也支持容器化部署，提供了丰富的 api,重要的是其支持多租户。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">charts</span><br><span class="line">├── org1</span><br><span class="line">│   ├── repoa</span><br><span class="line">│   │   └── nginx-ingress-0.9.3.tgz</span><br><span class="line">├── org2</span><br><span class="line">│   ├── repob</span><br><span class="line">│   │   └── chartmuseum-0.4.0.tgz</span><br></pre></td></tr></table></figure>
+
+<h3 id="搭建chart-repo-demo"><a href="#搭建chart-repo-demo" class="headerlink" title="搭建chart repo demo"></a>搭建<code>chart repo</code> demo</h3><p>我们以<code>chartmusuem</code>为例，介绍如何搭建<code>chart repo</code>,以及如何将我们上面开发好的<code>chart</code>打包发布到我们的仓库中。</p>
+<ol>
+<li>安装并启动 chartmusuem:</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">curl -LO https://s3.amazonaws.com/chartmuseum/release/latest/bin/linux/amd64/chartmuseum</span><br><span class="line">chmod +x ./chartmuseum</span><br><span class="line">mv ./chartmuseum /usr/<span class="built_in">local</span>/bin</span><br><span class="line"></span><br><span class="line">[root@localhost ~]<span class="comment"># chartmuseum --port=9081 --storage=&quot;local&quot; --storage-local-rootdir=&quot;/root/charts&quot;</span></span><br><span class="line">2020-02-13T14:30:26.543+0800	INFO	Starting ChartMuseum	&#123;<span class="string">&quot;port&quot;</span>: 9081&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>helm 添加 repo:</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  helmdemo helm repo add chartmuseum http://192.168.5.82:9081</span><br><span class="line">➜  helmdemo helm repo update</span><br><span class="line">Hang tight <span class="keyword">while</span> we grab the latest from your chart repositories...</span><br><span class="line">...Successfully got an update from the <span class="string">&quot;chartmuseum&quot;</span> chart repository</span><br><span class="line">...Successfully got an update from the <span class="string">&quot;incubator&quot;</span> chart repository</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>将开发好的 chart 打包 tgz 文件并且发布到我们的仓库中:</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">➜  helmdemo create myappone</span><br><span class="line">➜  helmdemo <span class="built_in">cd</span> myappone/</span><br><span class="line">➜  myappone helm lint</span><br><span class="line">==&gt; Linting .</span><br><span class="line">[INFO] Chart.yaml: icon is recommended</span><br><span class="line"></span><br><span class="line">1 chart(s) linted, 0 chart(s) failed</span><br><span class="line">➜  myappone helm package .</span><br><span class="line">Successfully packaged chart and saved it to: /Users/donggang/Documents/Temp/helmdemo/myappone/myappone-0.1.0.tgz</span><br><span class="line">➜  myappone ls</span><br><span class="line">Chart.yaml         charts             myappone-0.1.0.tgz templates          values.yaml</span><br><span class="line">➜  myappone curl -L --data-binary <span class="string">&quot;@myappone-0.1.0.tgz&quot;</span> http://192.168.5.82:9081/api/charts</span><br><span class="line">&#123;<span class="string">&quot;saved&quot;</span>:<span class="literal">true</span>&#125;%</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>其他集群下载使用私有仓库的 chart</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  myappone helm repo update</span><br><span class="line">➜  myappone helm search repo myappone</span><br><span class="line">NAME                	CHART VERSION	APP VERSION	DESCRIPTION</span><br><span class="line">chartmuseum/myappone	0.1.0        	1.16.0     	A Helm chart <span class="keyword">for</span> Kubernetes</span><br></pre></td></tr></table></figure>
+
+<h2 id="一句话"><a href="#一句话" class="headerlink" title="一句话"></a>一句话</h2><ol>
+<li>kubeapps: 一个<code>web ui</code>工具部署<code>helm chart</code>；</li>
+<li>helm 支持丰富的插件，版本升级工具即通过插件实现的；</li>
+<li>helm 提供了<code>golang sdk</code>；</li>
+<li>目前包括<code>openshift</code>在内的厂商都支持<code>Helm</code>；</li>
+<li><code>lens</code>：一个<code>kubernetes</code>管理看板，支持<code>Helm</code>，其交互设计非常值得学习。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>Helm</code>已经成为事实上<code>kubernetes</code>包管理器的标准，并且也成功从 CNCF 中毕业。<code>Helm</code>能够很好的解决企业使用 kubernetes 所遇到的各种痛点，
+且新版本的<code>helm</code>架构更加清晰，职责也更加明确。在阅读本文后，相信您也对<code>Helm</code>有了一个初步的认识。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://helm.sh/">官方文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://static.sched.com/hosted_files/kccncna19/7c/Helm%20Intro.pdf">kubecon helm introduce</a></li>
+<li><a target="_blank" rel="noopener" href="https://static.sched.com/hosted_files/kccncna19/ec/helm3-deep-dive.pdf">kubecon helm deep dive </a></li>
+<li><a target="_blank" rel="noopener" href="https://codefresh.io/docs/docs/new-helm/helm-best-practices/#helm-packaging-strategies">codefresh helm 最佳实践</a></li>
+</ol>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Holder</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.happyhack.io/2020/03/30/helm/">https://blog.happyhack.io/2020/03/30/helm/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.happyhack.io" target="_blank">Happy Hack Everday</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Helm/">Helm</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/helm/2020-06-30-14-09-19.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/04/08/callgraph/"><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/callgraph/2020-06-08-16-21-41.webp" type="image/webp"><img class="prev-cover" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/callgraph/2020-06-08-16-21-41.png" onerror="onerror=null;src='/img/404.jpg'"></picture><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Golang源码分析可视化</div></div></a></div><div class="next-post pull-right"><a href="/2020/03/20/GO111MODULE/"><picture><source srcset="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/GO111MODULE/2020-03-21-17-51-09.webp" type="image/webp"><img class="next-cover" data-lazy-src="https://cdn.jsdelivr.net/gh/donggangcj/CDN/image/GO111MODULE/2020-03-21-17-51-09.png" onerror="onerror=null;src='/img/404.jpg'"></picture><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">GO111MODEDULE变量以及Go Module的使用建议</div></div></a></div></nav></article></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Holder</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@3/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script id="click-show-text" src="/js/third-party/ClickShowText.js" async="async" mobile="false"></script></div></body></html>
