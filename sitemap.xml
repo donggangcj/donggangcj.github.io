@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://blog.happyhack.io/about/index.html</loc>
+    <loc>https://blog.happyhack.io/2024/06/25/multiple-git-useraccount/</loc>
     
     <lastmod>2024-06-25</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>https://blog.happyhack.io/2024/06/25/multiple-git-useraccount/</loc>
+    <loc>https://blog.happyhack.io/about/index.html</loc>
     
     <lastmod>2024-06-25</lastmod>
     
@@ -549,6 +549,20 @@
   
   <url>
     <loc>https://blog.happyhack.io/tags/%E6%9E%B6%E6%9E%84/</loc>
+    <lastmod>2024-06-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.happyhack.io/tags/github/</loc>
+    <lastmod>2024-06-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.happyhack.io/tags/hack/</loc>
     <lastmod>2024-06-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
