@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://blog.happyhack.io/"/>
-  <updated>2024-06-25T13:09:09.801Z</updated>
+  <updated>2024-07-17T07:32:08.086Z</updated>
   <id>https://blog.happyhack.io/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>multiple-git-useraccount</title>
-    <link href="https://blog.happyhack.io/2024/06/25/multiple-git-useraccount/"/>
-    <id>https://blog.happyhack.io/2024/06/25/multiple-git-useraccount/</id>
-    <published>2024-06-25T09:18:58.000Z</published>
-    <updated>2024-06-25T13:09:09.801Z</updated>
+    <title>vscode-docker</title>
+    <link href="https://blog.happyhack.io/2024/07/17/vscode-docker/"/>
+    <id>https://blog.happyhack.io/2024/07/17/vscode-docker/</id>
+    <published>2024-07-17T09:32:08.000Z</published>
+    <updated>2024-07-17T07:32:08.086Z</updated>
     
     <summary type="html">
     
@@ -30,9 +30,31 @@
         
         
           &lt;script src=&quot;/assets/asciinema-player.js&quot;&gt;&lt;/script&gt;&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/asciinema-player.css&quot;&gt;
-&lt;p&gt;如果你有多个
+
+&lt;p&gt;vscode
         
       
+    
+    </summary>
+    
+    
+      <category term="Tips" scheme="https://blog.happyhack.io/categories/Tips/"/>
+    
+    
+      <category term="vscode" scheme="https://blog.happyhack.io/tags/vscode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>github多账号支持</title>
+    <link href="https://blog.happyhack.io/2024/06/25/multiple-git-useraccount/"/>
+    <id>https://blog.happyhack.io/2024/06/25/multiple-git-useraccount/</id>
+    <published>2024-06-25T09:18:58.000Z</published>
+    <updated>2024-06-26T00:10:29.787Z</updated>
+    
+    <summary type="html">
+    
+      本文介绍了如何在 mac上实现多 github用户支持
     
     </summary>
     
@@ -537,36 +559,6 @@ template
     
     
       <category term="api设计" scheme="https://blog.happyhack.io/tags/api%E8%AE%BE%E8%AE%A1/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>kubernetes1.17安装glusterfs</title>
-    <link href="https://blog.happyhack.io/2020/03/08/kubernetes-gluster/"/>
-    <id>https://blog.happyhack.io/2020/03/08/kubernetes-gluster/</id>
-    <published>2020-03-08T11:31:58.000Z</published>
-    <updated>2024-06-20T02:29:28.146Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;本文介绍了如何使用在最新kubernetes版本上安装&lt;code&gt;glusterfs&lt;/code&gt;。
-官方源仓库&lt;a
-        
-      
-    
-    </summary>
-    
-    
-      <category term="云原生" scheme="https://blog.happyhack.io/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/"/>
-    
-    
-      <category term="kubernetes" scheme="https://blog.happyhack.io/tags/kubernetes/"/>
-    
-      <category term="kubernetes存储" scheme="https://blog.happyhack.io/tags/kubernetes%E5%AD%98%E5%82%A8/"/>
     
   </entry>
   

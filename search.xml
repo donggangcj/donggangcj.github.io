@@ -4,7 +4,32 @@
   
     
     <entry>
-      <title>multiple-git-useraccount</title>
+      <title>vscode-docker</title>
+      <link href="/2024/07/17/vscode-docker/"/>
+      <url>/2024/07/17/vscode-docker/</url>
+      
+        <content type="html"><![CDATA[<script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css"><p>vscode 连接运行在远程服务器的容器时，会出现 docker socket 权限问题，错误为<code>permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock</code>。你可以通过以下步骤解决。</p><ol><li>创建 docker 组（如果尚不存在）通常，Docker 安装时会自动创建 docker 组。如果你的系统中没有这个组，可以手动创建：</li></ol><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">sudo groupadd docker</span><br><span class="line"></span><br></pre></td></tr></table></figure><ol start="2"><li>将用户添加到 docker 组假设你要添加的用户是 username，可以运行以下命令：</li></ol><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">sudo usermod -aG docker username</span><br><span class="line"></span><br></pre></td></tr></table></figure><ol start="3"><li>重启 Docker 服务有时候需要重启 Docker 服务使更改生效：</li></ol><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">sudo systemctl restart docker</span><br><span class="line"></span><br></pre></td></tr></table></figure><ol start="4"><li>重新登录用户为了使组更改生效，用户需要重新登录。可以通过注销并重新登录，或者在终端中使用以下命令：</li></ol><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">newgrp docker</span><br><span class="line"></span><br></pre></td></tr></table></figure><ol start="5"><li>验证用户权限登录用户后，运行以下命令来验证用户是否具有 Docker 访问权限：</li></ol><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker run hello-world</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>如果一切正常，你应该会看到 Docker 成功运行 hello-world 容器的输出。以上步骤将用户添加到 docker 组中，使其具有访问 docker.sock 的权限，从而能够使用 Docker 命令。如果需要更严格的权限控制，可以考虑使用其他安全措施，如 Docker 的授权插件或 AppArmor 等。</p><ol start="6"><li>如果你通过 vscode Remote 连接到服务器，可能 vscode 还是会报权限错误，问题的原因是 vscode 服务器仍在使用旧用户权限（没有 docker 组）运行。在远程计算机上终止相应的进程，然后重新加载 vscode 窗口，一切都应该无需重新启动即可正常工作。</li></ol><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ ps aux|grep bin/code-server <span class="comment"># find out process id</span></span><br><span class="line">$ <span class="built_in">kill</span> &lt;process <span class="built_in">id</span>&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Tips </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> vscode </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>github多账号支持</title>
       <link href="/2024/06/25/multiple-git-useraccount/"/>
       <url>/2024/06/25/multiple-git-useraccount/</url>
       
